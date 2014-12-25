@@ -19,7 +19,7 @@ var SHURSCRIPT = {
 		server: "http://cloud.shurscript.org:8080/"
 	},
 	environment: {
-		page: location.pathname.indexOf("/foro") !== -1 ? location.pathname.replace("/foro", "") : "frontpage",
+		page: location.pathname.indexOf("/foro") != -1 ? location.pathname.replace("/foro", "") : "frontpage",
 		thread: {
 			id: getCurrentThread(),
 			page: getCurrentPage(),
@@ -30,17 +30,21 @@ var SHURSCRIPT = {
 
 function getCurrentPage() {
 	var r;
+
 	if (r = decodeURIComponent((new RegExp('[?|&]page=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1])) return r;// from URL parameter
 	if (r = document.getElementById("showthread_threadrate_form")) return r.page.value;
 	if (r = document.querySelector(".pagenav:first-child span strong")) return r.textContent;
+
 	return null;
 }
 
 function getCurrentThread() {
 	var r;
+
 	if (r = unsafeWindow.threadid) return r;
 	if (r = decodeURIComponent((new RegExp('[?|&]t=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1])) return r;// from URL parameter
-	if (r = document.getElementById("qr_threadid")) return r.value;
+	if (r = document.getElementById("qr_threadid")) return r.t.value;
+
 	return null;
 }
 
@@ -125,7 +129,7 @@ function getCurrentThread() {
 		 * Compone una cadena con el nombre del modulo que esta llamando al helper y la hora
 		 */
 		_getCallerDescription: function () {
-			return '[SHURSCRIPT]  [Módulo ' + this.moduleId + '] ' + new Date().toLocaleTimeString() + ': ';
+			return '[SHURSCRIPT]  [Modulo ' + this.moduleId + '] ' + new Date().toLocaleTimeString() + ': ';
 		},
 
 		/**
@@ -191,6 +195,7 @@ function getCurrentThread() {
 		 * @param {object} exception - [opcional] la excepcion
 		 */
 		throw: function (message, exception) {
+			//console.log(new Error().stack);
 			this.log('[EXCEPTION] - ' + message);
 			if (exception !== undefined) {
 				this.log(exception);
@@ -291,6 +296,7 @@ function getCurrentThread() {
 	 * Inicializa la aplicacion de modo normal
 	 */
 	core.initialize = function () {
+
 		if (!isCompatible()) {
 			alert('SHURSCRIPT: El complemento o extensión de userscripts que usas en tu navegador no está soportado.');
 			return;
@@ -335,31 +341,21 @@ function getCurrentThread() {
 			closeButton: false
 		});
 
-		//Recuperamos las configuraciones del servidor
-		$.ajax({
-			type: 'GET',
-			url: SHURSCRIPT.config.server + 'config-' + SHURSCRIPT.scriptBranch
-		}).done(function (data) {
-			_.extend(SHURSCRIPT.config, data);
+		_.extend(SHURSCRIPT.config, {
+									  "web": "http://shurscript.org/",
+									  "fcThread": "http://www.forocoches.com/foro/showthread.php?t=4024355",
+									  "imagesURL": "http://static.shurscript.org/img/",
+									  "repositoryURL": "https://github.com/TheBronx/shurscript/",
+									  "updateURL": "http://static.shurscript.org/js/beta/0.23.1/shurscript.min.user.js",
+									  "installURL": "http://static.shurscript.org/js/beta/0.23.1/shurscript.min.user.js",
+									  "visualChangelog": "https://github.com/TheBronx/shurscript/blob/dev/CHANGELOG.md",
+									  "visualFAQ": "https://github.com/TheBronx/shurscript/wiki/FAQ-(Indice)",
+									  "rawChangelog": "https://github.com/TheBronx/shurscript/raw/dev/CHANGELOG.md",
+									  "imgurClientID": "e115ac41fea372d"
+									});
 
-			//lanza la carga de componentes y modulos
-			core.loadNextComponent();
-
-			core.helper.deleteLocalValue('SERVER_DOWN_ALERT');
-		}).fail(function (error) {
-			if (!core.helper.getLocalValue('SERVER_DOWN_ALERT')) {
-				setTimeout(function() {
-					core.helper.showMessageBar({
-						message: "<strong>Oops...</strong> No se ha podido contactar con el cloud de <strong>shurscript</strong>. Consulta qué puede estar causando este problema en <a href='https://github.com/TheBronx/shurscript/wiki/FAQ#no-se-ha-podido-contactar-con-el-cloud-de-shurscript'>las F.A.Q.</a> y si el problema persiste, deja constancia en el <a href='" + SHURSCRIPT.config.fcThread + "'>hilo oficial</a>. <strong>{err: config}</strong>",
-						type: "danger",
-						onClose: function () {
-							core.helper.setLocalValue('SERVER_DOWN_ALERT', true);
-						}
-					});
-				}, 3000);
-			}
-		});
-
+		//lanza la carga de componentes y modulos
+		core.loadNextComponent();
 	};
 
 	// Carga el siguiente componente. En caso contrario llama a la carga de módulos.
@@ -390,6 +386,8 @@ function getCurrentThread() {
 		if (_.isFunction(component.load)) {
 			component.load(); // sin callback
 		}
+
+		core.helper.log("Cargando componente " + component.id);
 
 		core.loadNextComponent();
 	};
