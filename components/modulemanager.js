@@ -92,8 +92,7 @@
 		 */
 		storePreferences: function (callback) {
 			var serializedPreferences = JSON.stringify(this.preferences);
-
-			this.helper.setValue('__preferences', serializedPreferences, callback);
+			this.helper.setValue('__preferences', serializedPreferences,callback);
 		},
 
 		/**
@@ -122,20 +121,20 @@
 		 */
 		migratePreferences: function (callback) {
 			for (var newPrefName in this.preferences) {
-				var oldPrefName = ''; //Convertir el nueevo nombre al formato antiguo en mayusculas
+				var oldPrefName = ''; //Convertir el nuevo nombre al formato antiguo en mayusculas
 				for (var i = 0; i < newPrefName.length; i++) {
 					if (newPrefName[i] == newPrefName[i].toUpperCase()) { //Si hay una mayúscula metemos un guión bajo antes
 						oldPrefName += "_";
 					}
 					oldPrefName += newPrefName[i].toUpperCase();
 				}
+
 				var oldPref = this.helper.getLocalValue(oldPrefName);
 				if (typeof oldPref !== "undefined") {
 					this.preferences[newPrefName] = oldPref;
 					this.helper.log("Migrada: " + oldPrefName + " = " + oldPref);
 				}
-			}
-			;
+			};
 
 			this.storePreferences(callback);
 		},
@@ -236,8 +235,7 @@
 	 * Método temporal que migrará los módulos activos y las preferencias de cada módulo antes de que se sincronizasen en la nube
 	 */
 	moduleManager.migratePreferences = function (callback) {
-
-		var dialog = bootbox.dialog({message: '<center>Migrando preferencias...</center>'});
+		//var dialog = bootbox.dialog({message: '<center>Migrando preferencias...</center>'});
 		var migratedCount = 0;
 		var numModules = 0;
 		var completedCallback = function () {
@@ -265,9 +263,10 @@
 		}
 
 		//Migramos las preferencias individuales de cada módulo
+		numModules = _.size(moduleManager.modules);
 		$.each(moduleManager.modules, function (moduleName, module) {
 			try {
-				numModules++;
+				//numModules++;
 				module.migratePreferences(function () {
 					module.migrateValues(completedCallback);
 				});
@@ -277,6 +276,7 @@
 		});
 
 	}
+
 
 	/**
 	 * Lanza la carga de modulos en document.ready
