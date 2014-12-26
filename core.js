@@ -195,6 +195,7 @@ function getCurrentThread() {
 		 * @param {object} exception - [opcional] la excepcion
 		 */
 		throw: function (message, exception) {
+			//console.log(new Error().stack);
 			this.log('[EXCEPTION] - ' + message);
 			if (exception !== undefined) {
 				this.log(exception);
@@ -340,31 +341,21 @@ function getCurrentThread() {
 			closeButton: false
 		});
 
-		//Recuperamos las configuraciones del servidor
-		$.ajax({
-			type: 'GET',
-			url: SHURSCRIPT.config.server + 'config-' + SHURSCRIPT.scriptBranch
-		}).done(function (data) {
-			_.extend(SHURSCRIPT.config, data);
+		_.extend(SHURSCRIPT.config, {
+									  "web": "http://shurscript.org/",
+									  "fcThread": "http://www.forocoches.com/foro/showthread.php?t=4024355",
+									  "imagesURL": "http://static.shurscript.org/img/",
+									  "repositoryURL": "https://github.com/TheBronx/shurscript/",
+									  "updateURL": "http://static.shurscript.org/js/beta/0.23.1/shurscript.min.user.js",
+									  "installURL": "http://static.shurscript.org/js/beta/0.23.1/shurscript.min.user.js",
+									  "visualChangelog": "https://github.com/TheBronx/shurscript/blob/dev/CHANGELOG.md",
+									  "visualFAQ": "https://github.com/TheBronx/shurscript/wiki/FAQ-(Indice)",
+									  "rawChangelog": "https://github.com/TheBronx/shurscript/raw/dev/CHANGELOG.md",
+									  "imgurClientID": "e115ac41fea372d"
+									});
 
-			//lanza la carga de componentes y modulos
-			core.loadNextComponent();
-
-			core.helper.deleteLocalValue('SERVER_DOWN_ALERT');
-		}).fail(function (error) {
-			if (!core.helper.getLocalValue('SERVER_DOWN_ALERT')) {
-				setTimeout(function() {
-					core.helper.showMessageBar({
-						message: "<strong>Oops...</strong> No se ha podido contactar con el cloud de <strong>shurscript</strong>. Consulta qué puede estar causando este problema en <a href='https://github.com/TheBronx/shurscript/wiki/FAQ#no-se-ha-podido-contactar-con-el-cloud-de-shurscript'>las F.A.Q.</a> y si el problema persiste, deja constancia en el <a href='" + SHURSCRIPT.config.fcThread + "'>hilo oficial</a>. <strong>{err: config}</strong>",
-						type: "danger",
-						onClose: function () {
-							core.helper.setLocalValue('SERVER_DOWN_ALERT', true);
-						}
-					});
-				}, 3000);
-			}
-		});
-
+		//lanza la carga de componentes y modulos
+		core.loadNextComponent();
 	};
 
 	// Carga el siguiente componente. En caso contrario llama a la carga de módulos.
@@ -395,6 +386,8 @@ function getCurrentThread() {
 		if (_.isFunction(component.load)) {
 			component.load(); // sin callback
 		}
+
+		core.helper.log("Cargando componente " + component.id);
 
 		core.loadNextComponent();
 	};
