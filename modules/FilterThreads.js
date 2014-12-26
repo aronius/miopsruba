@@ -181,8 +181,10 @@
 	 * Método temporal de migración de valores
 	 */
 	mod.migrateValues = function (callback) {
-		mod.helper.setValue("FAVORITES", mod.helper.getLocalValue("FAVORITES"), function () {
-			mod.helper.setValue("HIDDEN_THREADS", mod.helper.getLocalValue("HIDDEN_THREADS"), callback);
+		var favoritos = ((mod.helper.getLocalValue("FAVORITES") !== undefined)?mod.helper.getLocalValue("FAVORITES"):'[]');
+		mod.helper.setValue("FAVORITES", favoritos, function () {
+			var ocultos = ((mod.helper.getLocalValue("HIDDEN_THREADS") !== undefined)?mod.helper.getLocalValue("HIDDEN_THREADS"):'[]');
+			mod.helper.setValue("HIDDEN_THREADS", ocultos, callback);
 		});
 	};
 
@@ -220,7 +222,7 @@
 		var f2 = function () {
 			importIgnoreList();
 		};
-		
+
 		if (typeof exportFunction === 'function') {// Firefox 31+
 			exportFunction(f1, unsafeWindow, {defineAs: 'FilterThreads_importBuddyList'});
 			exportFunction(f2, unsafeWindow, {defineAs: 'FilterThreads_importIgnoreList'});
@@ -228,7 +230,7 @@
 			unsafeWindow.FilterThreads_importBuddyList = f1;
 			unsafeWindow.FilterThreads_importIgnoreList = f2;
 		}
-		
+
 		return [
 			createPref({type: 'header', caption: 'Ocultar hilos', subCaption: 'Puedes ocultar hilos de forma automática, ya sea mediante una lista negra de usuarios o por palabras clave en el título de los temas:'}),
 			createPref({type: 'checkbox', mapsTo: 'hideReadThreads', caption: 'Mostrar solo hilos no leídos.', subCaption: '<span style="color:gray;">De cualquier modo aparecerá un botón para ocultarlos o mostrarlos. Esta opción solo cambia el comportamiento por defecto.</span>'}),
@@ -921,7 +923,7 @@
 				for (var i = 0, n = elems.length; i < n; i++) {
 					contacts.push(elems[i].textContent);
 				}
-				
+
 				var newContactsList = contacts.join(', ');
 				var oldContactsList = $("input[data-maps-to='highlightUsers']").tokenfield('getTokensList', ',');
 
@@ -941,7 +943,7 @@
 							bootbox.alert("No hemos detectado cambios en tu <a href='/foro/profile.php?do=buddylist' target='_blank'>lista de contactos</a> " +
 								"desde la última importación. Realiza cambios en tus contactos antes de volver a intentarlo.");
 						}
-					} else {					
+					} else {
 						$("input[data-maps-to='highlightUsers']").tokenfield('setTokens', newContactsList);
 					}
 				} else { // en caso contrario, avisa al usuario de que no existen contactos
@@ -957,7 +959,7 @@
 
 	function importIgnoreList() {
 		var xmlhttp = new XMLHttpRequest();
-		
+
 		xmlhttp.onreadystatechange = function () {
 			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 				var html = xmlhttp.responseText;
@@ -965,7 +967,7 @@
 				var doc = parser.parseFromString(html, "text/html");
 
 				var ignoreListElem = doc.getElementById("ignorelist"); // Si no hay nadie en ignorados este elemento no existe
-				
+
 				if (ignoreListElem) {
 					var elems = ignoreListElem.getElementsByTagName("a");
 					var ignoredUsers = [];
@@ -973,7 +975,7 @@
 					for (var i = 0, n = elems.length; i < n; i++) {
 						ignoredUsers.push(elems[i].textContent);
 					}
-					
+
 					var newIgnoredList = ignoredUsers.join(', ');
 					var oldIgnoredList = $("input[data-maps-to='hiddenUsers']").tokenfield('getTokensList', ',');
 
