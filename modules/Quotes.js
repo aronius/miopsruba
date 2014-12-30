@@ -49,7 +49,7 @@
 			creOpt({
 				type: 'radio',
 				elements: [
-					{value: 2, caption: 'Cada 2 minutos'},
+					{value: 15, caption: 'Cada 15 minutos (Por modificación de Ilitri)'},
 					{value: 10, caption: 'Cada 10 minutos'},
 					{value: 30, caption: 'Cada 30 minutos'},
 					{value: 'off', caption: 'Manualmente', subCaption: 'Haciendo clic en el contador de notificaciones'}
@@ -135,7 +135,7 @@
 			}
 		}
 
-		notificationsUrl = "http://www.forocoches.com/foro/search.php?do=process&query=" + escape(encodedUsername) + "&titleonly=0&showposts=1";
+		notificationsUrl = "http://www.forocoches.com/foro/search.php?do=process&query=aronius&titleonly=0&showposts=1";
 		lastUpdate = mod.helper.getValue("LAST_QUOTES_UPDATE");
 		lastReadQuote = mod.helper.getValue("LAST_READ_QUOTE");
 		lastQuotesJSON = mod.helper.getValue("LAST_QUOTES");
