@@ -49,7 +49,7 @@
 			creOpt({
 				type: 'radio',
 				elements: [
-					{value: 15, caption: 'Cada 15 minutos (Por modificación de Ilitri)'},
+					{value: 2, caption: 'Cada 2 minutos'},
 					{value: 10, caption: 'Cada 10 minutos'},
 					{value: 30, caption: 'Cada 30 minutos'},
 					{value: 'off', caption: 'Manualmente', subCaption: 'Haciendo clic en el contador de notificaciones'}
