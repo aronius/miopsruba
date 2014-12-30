@@ -42,7 +42,7 @@
 // @require         https://github.com/TheBronx/shurscript/raw/dev/components/autoupdater.js
 // @require         https://github.com/TheBronx/shurscript/raw/dev/components/preferences.js
 // @require         https://github.com/TheBronx/shurscript/raw/dev/components/parser.js
-// @require         https://github.com/TheBronx/shurscript/raw/dev/modules/Quotes.js
+// @require         https://github.com/aronius/miopsruba/raw/dev/modules/Quotes.js
 // @require         https://github.com/aronius/miopsruba/raw/dev/modules/FilterThreads.js
 // @require         https://github.com/TheBronx/shurscript/raw/dev/modules/BetterPosts.js
 // @require         https://github.com/TheBronx/shurscript/raw/dev/modules/Scrollers.js
