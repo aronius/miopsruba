@@ -135,7 +135,7 @@
 			}
 		}
 
-		notificationsUrl = "http://www.forocoches.com/foro/search.php?do=process&query=aronius&titleonly=0&showposts=1";
+		notificationsUrl = "http://www.forocoches.com/foro/search.php?do=process&query=" + escape(encodedUsername) + "&titleonly=0&showposts=1";
 		lastUpdate = mod.helper.getValue("LAST_QUOTES_UPDATE");
 		lastReadQuote = mod.helper.getValue("LAST_READ_QUOTE");
 		lastQuotesJSON = mod.helper.getValue("LAST_QUOTES");
